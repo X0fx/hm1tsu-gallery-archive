@@ -24,6 +24,15 @@ const CURSOR_WIDTHS: Record<string, number> = {
   "View Collection": 140,
 };
 
+// --- NETLIFY CDN HELPER ---
+// Automatically optimizes images when deployed on Netlify, but uses raw images locally
+function getCDNImage(src: string, width: number = 800) {
+  if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
+    return src;
+  }
+  return `/.netlify/images?url=${encodeURIComponent(src)}&w=${width}&q=80`;
+}
+
 // --- DATA: ARCHIVE COLLECTIONS ---
 const ARCHIVE_COLLECTIONS: CollectionData[] = [
   {
@@ -273,7 +282,7 @@ function MagneticButton({ children, href }: { children: React.ReactNode, href: s
   );
 }
 
-// --- 5. IN-VIEW MASONRY IMAGE WITH PROGRESSIVE BLUR ---
+// --- 5. IN-VIEW MASONRY IMAGE WITH CDN OPTIMIZATION ---
 function MasonryImage({ 
   src, alt, setCursorText, onImageClick
 }: { 
@@ -293,9 +302,16 @@ function MasonryImage({
       transition={{ duration: 0.8, ease: "easeOut" }}
       className="relative w-full mb-6 break-inside-avoid overflow-hidden rounded-xl cursor-none group shadow-sm hover:shadow-md transition-shadow duration-300"
     >
-      <img src={src} alt={alt} loading="lazy" decoding="async" className="w-full h-auto block bg-gray-50" />
+      {/* getCDNImage wraps src here for 800px optimization */}
+      <img 
+        src={getCDNImage(src, 800)} 
+        alt={alt} 
+        loading="lazy" 
+        decoding="async" 
+        className="w-full h-auto block bg-gray-50" 
+      />
       
-      {/* PERFECTED PROGRESSIVE BLUR LAYER (No Black Gradient, No Jumping) */}
+      {/* PROGRESSIVE BLUR OVERLAY */}
       <div className="absolute inset-x-0 bottom-0 h-1/2 pointer-events-none flex flex-col justify-end">
         <div 
           className="absolute inset-0 z-0 backdrop-blur-none group-hover:backdrop-blur-[16px] transition-all duration-500 ease-out"
@@ -304,9 +320,7 @@ function MasonryImage({
             WebkitMaskImage: 'linear-gradient(to top, black 10%, transparent 100%)'
           }}
         />
-        {/* Title Text */}
         <div className="relative z-20 p-5 md:p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out">
-          {/* Added a heavy drop shadow so the white text stays readable against light images without needing a dark gradient */}
           <span className="text-white font-sans font-medium tracking-wide text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
             {alt}
           </span>
@@ -316,7 +330,7 @@ function MasonryImage({
   );
 }
 
-// --- 6. INFINITE SLIDER WITH PROGRESSIVE BLUR ---
+// --- 6. INFINITE SLIDER WITH CDN OPTIMIZATION ---
 function InfiniteSlider({ 
   images, setCursorText, onImageClick
 }: { 
@@ -346,9 +360,15 @@ function InfiniteSlider({
             onMouseLeave={() => setCursorText("")}
             className="relative h-[350px] md:h-[500px] aspect-[4/5] flex-shrink-0 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-500 cursor-none bg-gray-50 group"
           >
-            <img src={img.src} alt={img.title} decoding="async" className="w-full h-full object-cover" />
+            {/* getCDNImage wraps src here for 600px optimization */}
+            <img 
+              src={getCDNImage(img.src, 600)} 
+              alt={img.title} 
+              decoding="async" 
+              className="w-full h-full object-cover" 
+            />
             
-            {/* PERFECTED PROGRESSIVE BLUR LAYER (No Black Gradient, No Jumping) */}
+            {/* PROGRESSIVE BLUR OVERLAY */}
             <div className="absolute inset-x-0 bottom-0 h-1/2 pointer-events-none flex flex-col justify-end">
               <div 
                 className="absolute inset-0 z-0 backdrop-blur-none group-hover:backdrop-blur-[24px] transition-all duration-500 ease-out"
@@ -507,8 +527,9 @@ export default function App() {
               className="relative z-10 w-full h-[90vh] flex flex-col items-center justify-center p-4 pointer-events-none"
             >
                 <div className="w-full h-[80%] flex items-center justify-center overflow-hidden">
+                   {/* getCDNImage wraps selectedArtwork here for full-size 1600px optimization in modal */}
                    <img 
-                     src={selectedArtwork} 
+                     src={getCDNImage(selectedArtwork, 1600)} 
                      alt="Expanded Artwork" 
                      decoding="async"
                      onClick={(e) => {
