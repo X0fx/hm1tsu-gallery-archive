@@ -16,7 +16,7 @@ type CollectionData = {
 };
 
 const CURSOR_WIDTHS: Record<string, number> = {
-  "+ More": 76,
+  "+ More": 75,
   "Close": 70,
   "Open": 65,
   "View": 65,
@@ -25,7 +25,6 @@ const CURSOR_WIDTHS: Record<string, number> = {
 };
 
 // --- NETLIFY CDN HELPER ---
-// Automatically optimizes images when deployed on Netlify, but uses raw images locally
 function getCDNImage(src: string, width: number = 800) {
   if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
     return src;
@@ -51,89 +50,89 @@ const ARCHIVE_COLLECTIONS: CollectionData[] = [
     id: 'archive25',
     title: 'archive25',
     images: [
-      { src: "/artworks/archive25/ache.jpg", title: "Ache" },
-      { src: "/artworks/archive25/chrome.jpg", title: "Chrome" },
+      { src: "/artworks/archive25/ache.jpg", title: "Acheron" },
+      { src: "/artworks/archive25/chrome.jpg", title: "ChromAbstract" },
       { src: "/artworks/archive25/encore.jpg", title: "Encore" },
       { src: "/artworks/archive25/firefly.jpg", title: "Firefly" },
-      { src: "/artworks/archive25/hkt.jpg", title: "HKT" },
+      { src: "/artworks/archive25/hkt.jpg", title: "Hakaty" },
       { src: "/artworks/archive25/hugo.jpg", title: "Hugo" },
       { src: "/artworks/archive25/kafka.jpg", title: "Kafka" },
       { src: "/artworks/archive25/lagrange.jpg", title: "Lagrange" },
-      { src: "/artworks/archive25/maid.jpg", title: "Maid" },
-      { src: "/artworks/archive25/marin.jpg", title: "Marin" },
-      { src: "/artworks/archive25/mart.jpg", title: "Mart" },
-      { src: "/artworks/archive25/susei.jpg", title: "Susei" },
-      { src: "/artworks/archive25/wt60.jpg", title: "WT60" },
+      { src: "/artworks/archive25/maid.jpg", title: "Ancilla" },
+      { src: "/artworks/archive25/marin.jpg", title: "Marine" },
+      { src: "/artworks/archive25/mart.jpg", title: "March7" },
+      { src: "/artworks/archive25/susei.jpg", title: "Suisei" },
+      { src: "/artworks/archive25/wt60.jpg", title: "Wooting60" },
     ]
   },
   {
     id: 'makeupBA',
     title: 'SLClubDisc',
     images: [
-      { src: "/artworks/slcdisc/1.jpg", title: "SL Club 1" },
-      { src: "/artworks/slcdisc/2.jpg", title: "SL Club 2" },
-      { src: "/artworks/slcdisc/3.jpg", title: "SL Club 3" },
-      { src: "/artworks/slcdisc/4.jpg", title: "SL Club 4" },
-      { src: "/artworks/slcdisc/5.jpg", title: "SL Club 5" },
-      { src: "/artworks/slcdisc/6.jpg", title: "SL Club 6" },
+      { src: "/artworks/slcdisc/1.jpg", title: "makeupDisc_open" },
+      { src: "/artworks/slcdisc/2.jpg", title: "makeupDisc_azusa" },
+      { src: "/artworks/slcdisc/3.jpg", title: "makeupDisc_hanako" },
+      { src: "/artworks/slcdisc/4.jpg", title: "makeupDisc_hifumi" },
+      { src: "/artworks/slcdisc/5.jpg", title: "makeupDisc_koharu" },
+      { src: "/artworks/slcdisc/6.jpg", title: "makeupDisc_close" },
     ]
   },
   {
     id: 'gamecollab',
     title: 'JohnBrineCollab',
     images: [
-      { src: "/artworks/johnbrine/1.jpg", title: "JB Collab 1" },
-      { src: "/artworks/johnbrine/2.jpg", title: "JB Collab 2" },
-      { src: "/artworks/johnbrine/3.jpg", title: "JB Collab 3" },
-      { src: "/artworks/johnbrine/4.jpg", title: "JB Collab 4" },
+      { src: "/artworks/johnbrine/1.jpg", title: "JohnBrine" },
+      { src: "/artworks/johnbrine/2.jpg", title: "JohnBrineAlt1" },
+      { src: "/artworks/johnbrine/3.jpg", title: "JohnBrineAlt2" },
+      { src: "/artworks/johnbrine/4.jpg", title: "JohnBrineAlt3" },
     ]
   },
   {
     id: 'evecos',
     title: 'evecos',
     images: [
-      { src: "/artworks/evecos/1.jpg", title: "Eve Cosplay 1" },
-      { src: "/artworks/evecos/2.jpg", title: "Eve Cosplay 2" },
-      { src: "/artworks/evecos/3.jpg", title: "Eve Cosplay 3" },
-      { src: "/artworks/evecos/4.jpg", title: "Eve Cosplay 4" },
+      { src: "/artworks/evecos/1.jpg", title: "eveCosplay" },
+      { src: "/artworks/evecos/2.jpg", title: "eveCosplay1" },
+      { src: "/artworks/evecos/3.jpg", title: "eveCosplay2" },
+      { src: "/artworks/evecos/4.jpg", title: "eveCosplay3" },
     ]
   },
   {
     id: 'twt13',
     title: 'twitter_banner',
     images: [
-      { src: "/artworks/twt13/1.jpg", title: "Banner 1" },
-      { src: "/artworks/twt13/2.jpg", title: "Banner 2" },
-      { src: "/artworks/twt13/3.jpg", title: "Banner 3" },
-      { src: "/artworks/twt13/4.jpg", title: "Banner 4" },
-      { src: "/artworks/twt13/5.jpg", title: "Banner 5" },
-      { src: "/artworks/twt13/6.jpg", title: "Banner 6" },
-      { src: "/artworks/twt13/7.jpg", title: "Banner 7" },
-      { src: "/artworks/twt13/8.jpg", title: "Banner 8" },
+      { src: "/artworks/twt13/1.jpg", title: "acidLeak.twtBanner" },
+      { src: "/artworks/twt13/2.jpg", title: "acidLeak.twtBanner" },
+      { src: "/artworks/twt13/3.jpg", title: "acidLeak.twtBanner" },
+      { src: "/artworks/twt13/4.jpg", title: "acidLeak.twtBanner" },
+      { src: "/artworks/twt13/5.jpg", title: "acidLeak.twtBanner" },
+      { src: "/artworks/twt13/6.jpg", title: "acidLeak.twtBanner" },
+      { src: "/artworks/twt13/7.jpg", title: "acidLeak.twtBanner" },
+      { src: "/artworks/twt13/8.jpg", title: "acidLeak.twtBanner" },
     ]
   },
   {
     id: 'arcaeatix',
     title: 'arcaeaTicket',
     images: [
-      { src: "/artworks/arcaeatx/aglskr.png", title: "Aglskr" },
-      { src: "/artworks/arcaeatx/feef.png", title: "Feef" },
-      { src: "/artworks/arcaeatx/tempe.png", title: "Tempe" },
+      { src: "/artworks/arcaeatx/aglskr.png", title: "Aegleseeker" },
+      { src: "/artworks/arcaeatx/feef.png", title: "FracturedRay" },
+      { src: "/artworks/arcaeatx/tempe.png", title: "Tempestissimo" },
     ]
   },
   {
     id: 'others',
     title: 'others',
     images: [
-      { src: "/artworks/cal.jpg", title: "Cal" },
-      { src: "/artworks/eve.jpg", title: "Eve" },
-      { src: "/artworks/exa.jpg", title: "Exa" },
-      { src: "/artworks/flame2.jpg", title: "Flame II" },
-      { src: "/artworks/flamew.jpg", title: "Flame W" },
-      { src: "/artworks/mare.jpg", title: "Mare" },
-      { src: "/artworks/mcedit.jpg", title: "MC Edit" },
-      { src: "/artworks/mel.jpg", title: "Mel" },
-      { src: "/artworks/sanhua13.jpg", title: "Sanhua 13" },
+      { src: "/artworks/cal.jpg", title: "sCalMaid" },
+      { src: "/artworks/eve.jpg", title: "ratCore.Evelyn" },
+      { src: "/artworks/exa.jpg", title: "Exasperation" },
+      { src: "/artworks/flame2.jpg", title: "Jeanne" },
+      { src: "/artworks/flamew.jpg", title: "FlameWall" },
+      { src: "/artworks/mare.jpg", title: "Marenol" },
+      { src: "/artworks/mcedit.jpg", title: "c4d_mc" },
+      { src: "/artworks/mel.jpg", title: "Melania" },
+      { src: "/artworks/sanhua13.jpg", title: "SanhuaCollab" },
     ]
   }
 ];
@@ -282,7 +281,7 @@ function MagneticButton({ children, href }: { children: React.ReactNode, href: s
   );
 }
 
-// --- 5. IN-VIEW MASONRY IMAGE WITH CDN OPTIMIZATION ---
+// --- 5. IN-VIEW MASONRY IMAGE WITH MOBILE ADAPTATION ---
 function MasonryImage({ 
   src, alt, setCursorText, onImageClick
 }: { 
@@ -300,9 +299,9 @@ function MasonryImage({
       initial={{ opacity: 0, y: 40, filter: 'blur(10px)' }}
       animate={isInView ? { opacity: 1, y: 0, filter: 'blur(0px)' } : {}}
       transition={{ duration: 0.8, ease: "easeOut" }}
-      className="relative w-full mb-6 break-inside-avoid overflow-hidden rounded-xl cursor-none group shadow-sm hover:shadow-md transition-shadow duration-300"
+      // Adjusted bottom margin for 2-column mobile layout
+      className="relative w-full mb-3 md:mb-6 break-inside-avoid overflow-hidden rounded-xl cursor-none group shadow-sm hover:shadow-md transition-shadow duration-300"
     >
-      {/* getCDNImage wraps src here for 800px optimization */}
       <img 
         src={getCDNImage(src, 800)} 
         alt={alt} 
@@ -311,18 +310,22 @@ function MasonryImage({
         className="w-full h-auto block bg-gray-50" 
       />
       
-      {/* PROGRESSIVE BLUR OVERLAY */}
+      {/* PROGRESSIVE BLUR LAYER - Opacity 100 on Mobile by default, hover on Desktop */}
       <div className="absolute inset-x-0 bottom-0 h-1/2 pointer-events-none flex flex-col justify-end">
         <div 
-          className="absolute inset-0 z-0 backdrop-blur-none group-hover:backdrop-blur-[16px] transition-all duration-500 ease-out"
+          className="absolute inset-0 z-0 opacity-100 md:opacity-0 group-hover:opacity-100 backdrop-blur-[12px] md:backdrop-blur-[16px] transition-all duration-500 ease-out"
           style={{
             maskImage: 'linear-gradient(to top, black 10%, transparent 100%)',
             WebkitMaskImage: 'linear-gradient(to top, black 10%, transparent 100%)'
           }}
         />
-        <div className="relative z-20 p-5 md:p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out">
-          <span className="text-white font-sans font-medium tracking-wide text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+        <div className="relative z-20 p-3 md:p-6 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out flex justify-between items-end">
+          <span className="text-white font-sans font-medium tracking-wide text-xs md:text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] truncate pr-2">
             {alt}
+          </span>
+          {/* THE MOBILE CURSOR MIMIC BADGE */}
+          <span className="md:hidden flex-shrink-0 bg-black/45 backdrop-blur-md text-white px-2.5 py-1 rounded-full text-[9px] font-sans tracking-wider border border-white/20 shadow-sm">
+            + More
           </span>
         </div>
       </div>
@@ -330,7 +333,7 @@ function MasonryImage({
   );
 }
 
-// --- 6. INFINITE SLIDER WITH CDN OPTIMIZATION ---
+// --- 6. INFINITE SLIDER WITH MOBILE ADAPTATION ---
 function InfiniteSlider({ 
   images, setCursorText, onImageClick
 }: { 
@@ -348,7 +351,7 @@ function InfiniteSlider({
       onMouseLeave={() => { setIsHovered(false); setCursorText(""); }}
     >
       <motion.div
-        className="flex gap-6 min-w-max px-3"
+        className="flex gap-4 md:gap-6 min-w-max px-3"
         animate={{ x: ["0%", "-33.33%"] }}
         transition={{ duration: isHovered ? 80 : 20, ease: "linear", repeat: Infinity }}
       >
@@ -358,9 +361,8 @@ function InfiniteSlider({
             onClick={() => onImageClick(img.src)}
             onMouseEnter={() => setCursorText("+ More")}
             onMouseLeave={() => setCursorText("")}
-            className="relative h-[350px] md:h-[500px] aspect-[4/5] flex-shrink-0 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-500 cursor-none bg-gray-50 group"
+            className="relative h-[250px] md:h-[500px] aspect-[4/5] flex-shrink-0 rounded-xl md:rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-500 cursor-none bg-gray-50 group"
           >
-            {/* getCDNImage wraps src here for 600px optimization */}
             <img 
               src={getCDNImage(img.src, 600)} 
               alt={img.title} 
@@ -368,18 +370,22 @@ function InfiniteSlider({
               className="w-full h-full object-cover" 
             />
             
-            {/* PROGRESSIVE BLUR OVERLAY */}
+            {/* PROGRESSIVE BLUR LAYER - Opacity 100 on Mobile by default, hover on Desktop */}
             <div className="absolute inset-x-0 bottom-0 h-1/2 pointer-events-none flex flex-col justify-end">
               <div 
-                className="absolute inset-0 z-0 backdrop-blur-none group-hover:backdrop-blur-[24px] transition-all duration-500 ease-out"
+                className="absolute inset-0 z-0 opacity-100 md:opacity-0 group-hover:opacity-100 backdrop-blur-[16px] md:backdrop-blur-[24px] transition-all duration-500 ease-out"
                 style={{
                   maskImage: 'linear-gradient(to top, black 10%, transparent 100%)',
                   WebkitMaskImage: 'linear-gradient(to top, black 10%, transparent 100%)'
                 }}
               />
-              <div className="relative z-20 p-6 md:p-8 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out">
-                <span className="text-white font-sans font-medium tracking-wider text-base md:text-lg drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+              <div className="relative z-20 p-4 md:p-8 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out flex justify-between items-end">
+                <span className="text-white font-sans font-medium tracking-wider text-xs md:text-lg drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] truncate pr-2">
                   {img.title}
+                </span>
+                {/* THE MOBILE CURSOR MIMIC BADGE */}
+                <span className="md:hidden flex-shrink-0 bg-black/45 backdrop-blur-md text-white px-3 py-1.5 rounded-full text-[10px] font-sans tracking-wider border border-white/20 shadow-sm">
+                  + More
                 </span>
               </div>
             </div>
@@ -390,7 +396,7 @@ function InfiniteSlider({
   );
 }
 
-// --- 7. COLLECTION ACCORDION COMPONENT ---
+// --- 7. COLLECTION ACCORDION COMPONENT (Mobile Optimized Grid) ---
 function CollectionAccordion({ 
   collection, setCursorText, onImageClick 
 }: { 
@@ -412,7 +418,7 @@ function CollectionAccordion({
           ) : (
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z" /></svg>
           )}
-          <span className="text-2xl font-sans tracking-wide text-gray-800">{collection.title}</span>
+          <span className="text-xl md:text-2xl font-sans tracking-wide text-gray-800">{collection.title}</span>
         </div>
         <motion.div animate={{ rotate: isOpen ? 180 : 0 }} className="text-gray-300 group-hover:text-gray-900 transition-colors">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
@@ -428,7 +434,8 @@ function CollectionAccordion({
             transition={{ duration: 0.4, ease: [0.04, 0.62, 0.23, 0.98] }}
             className="overflow-hidden"
           >
-            <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6 pt-8 pb-12 px-2">
+            {/* 2-Columns on Mobile, Gaps reduced */}
+            <div className="columns-2 md:columns-3 lg:columns-3 gap-3 md:gap-6 pt-6 pb-10 px-1 md:px-2">
               {collection.images.map((img, index) => (
                 <MasonryImage
                   key={index}
@@ -495,7 +502,7 @@ export default function App() {
   ];
 
   return (
-    <div className="min-h-screen bg-white text-gray-700 font-serif p-8 flex flex-col items-center justify-between relative overflow-x-hidden cursor-none select-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
+    <div className="min-h-screen bg-white text-gray-700 font-serif p-6 md:p-8 flex flex-col items-center justify-between relative overflow-x-hidden cursor-none select-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
       
       <style dangerouslySetInnerHTML={{__html: `
         html, body { -ms-overflow-style: none; scrollbar-width: none; }
@@ -527,7 +534,6 @@ export default function App() {
               className="relative z-10 w-full h-[90vh] flex flex-col items-center justify-center p-4 pointer-events-none"
             >
                 <div className="w-full h-[80%] flex items-center justify-center overflow-hidden">
-                   {/* getCDNImage wraps selectedArtwork here for full-size 1600px optimization in modal */}
                    <img 
                      src={getCDNImage(selectedArtwork, 1600)} 
                      alt="Expanded Artwork" 
@@ -554,11 +560,11 @@ export default function App() {
                   onMouseEnter={() => setCursorText("Close")}
                   onMouseLeave={() => setCursorText("")}
                 >
-                    <h3 className="text-2xl font-serif text-gray-900">
+                    <h3 className="text-xl md:text-2xl font-serif text-gray-900">
                        {currentView === 'home' ? 'Featured Exhibition' : 'Archive Detail'}
                     </h3>
-                    <p className="text-gray-500 font-sans mt-2 text-sm tracking-wide">
-                      {currentView === 'home' ? 'Click the image to view the full collection archive.' : 'A closer look at the details and digital framework.'}
+                    <p className="text-gray-500 font-sans mt-2 text-xs md:text-sm tracking-wide">
+                      {currentView === 'home' ? 'Tap the image to view the full collection archive.' : 'A closer look at the details and digital framework.'}
                     </p>
                 </div>
             </motion.div>
@@ -569,42 +575,44 @@ export default function App() {
       {/* --- CONDITIONAL VIEWS --- */}
       {currentView === 'home' ? (
         <>
-          <div className="max-w-2xl mt-24 mb-10 w-full text-center">
-            <h1 className="text-2xl md:text-3xl leading-relaxed tracking-wide font-normal">
+          <div className="max-w-2xl mt-16 md:mt-24 mb-10 w-full text-center">
+            <h1 className="text-xl md:text-3xl leading-relaxed tracking-wide font-normal">
               <ScrambledText words={welcomeWords} />
             </h1>
           </div>
 
-          <div className="w-full max-w-[100vw] flex flex-col items-center mt-12">
-            <span className="text-xs font-sans tracking-widest text-gray-400 uppercase">Featured Works</span>
+          <div className="w-full max-w-[100vw] flex flex-col items-center mt-8 md:mt-12">
+            <span className="text-[10px] md:text-xs font-sans tracking-widest text-gray-400 uppercase">Featured Works</span>
             <InfiniteSlider images={featuredSliderImages} setCursorText={setCursorText} onImageClick={setSelectedArtwork} />
           </div>
 
-          <div className="mt-32 w-full max-w-6xl px-4">
-            <div className="text-center mb-16">
-              <span className="text-xs font-sans tracking-widest text-gray-400 uppercase">Experimental Archive</span>
+          <div className="mt-20 md:mt-32 w-full max-w-6xl px-2 md:px-4">
+            <div className="text-center mb-10 md:mb-16">
+              <span className="text-[10px] md:text-xs font-sans tracking-widest text-gray-400 uppercase">Experimental Archive</span>
             </div>
-            <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
+            
+            {/* 2-Columns on Mobile Layout */}
+            <div className="columns-2 md:columns-3 lg:columns-3 gap-3 md:gap-6">
               {randomMasonryImages.map((art, index) => (
                 <MasonryImage key={index} src={art.src} alt={art.title} setCursorText={setCursorText} onImageClick={setSelectedArtwork} />
               ))}
             </div>
           </div>
 
-          <div className="mt-40 mb-40 flex flex-col items-center justify-center w-full max-w-3xl text-center px-4">
-            <h2 className="text-sm font-sans tracking-widest text-gray-400 uppercase mb-8">About the Artist</h2>
-            <p className="text-2xl md:text-3xl font-serif text-gray-700 leading-relaxed">
+          <div className="mt-32 md:mt-40 mb-32 md:mb-40 flex flex-col items-center justify-center w-full max-w-3xl text-center px-4">
+            <h2 className="text-[10px] md:text-sm font-sans tracking-widest text-gray-400 uppercase mb-8">About the Artist</h2>
+            <p className="text-xl md:text-3xl font-serif text-gray-700 leading-relaxed">
               <BlurText words={aboutWords} />
             </p>
           </div>
 
-          <div className="mt-10 mb-32 flex flex-col items-center">
-            <p className="text-gray-400 font-sans mb-8">Have an idea in mind?</p>
+          <div className="mt-10 mb-20 md:mb-32 flex flex-col items-center">
+            <p className="text-gray-400 font-sans mb-8 text-sm md:text-base">Have an idea in mind?</p>
             <MagneticButton href="mailto:hello@example.com">Let's Talk Design</MagneticButton>
           </div>
         </>
       ) : (
-        <div className="w-full max-w-5xl mt-12 px-4 flex flex-col items-start min-h-[80vh] mb-32">
+        <div className="w-full max-w-5xl mt-12 px-2 md:px-4 flex flex-col items-start min-h-[80vh] mb-32">
           
           <button 
             onClick={() => {
@@ -613,13 +621,13 @@ export default function App() {
             }}
             onMouseEnter={() => setCursorText("Back")}
             onMouseLeave={() => setCursorText("")}
-            className="mb-16 flex items-center gap-3 text-gray-400 hover:text-gray-900 transition-colors cursor-none outline-none group"
+            className="mb-10 md:mb-16 flex items-center gap-3 text-gray-400 hover:text-gray-900 transition-colors cursor-none outline-none group"
           >
             <svg className="transform group-hover:-translate-x-1 transition-transform" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-            <span className="font-sans text-sm tracking-widest uppercase">Return to Gallery</span>
+            <span className="font-sans text-xs md:text-sm tracking-widest uppercase">Return to Gallery</span>
           </button>
 
-          <h2 className="text-4xl md:text-5xl font-serif text-gray-900 mb-16">Collections</h2>
+          <h2 className="text-3xl md:text-5xl font-serif text-gray-900 mb-10 md:mb-16">Collections</h2>
 
           <div className="w-full flex flex-col">
             {ARCHIVE_COLLECTIONS.map((collection) => (
