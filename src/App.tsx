@@ -217,9 +217,12 @@ function ScrambledText({ words }: { words: FormattedWord[] }) {
         if (w.format === 'italic') textStyle = "italic font-serif text-gray-500";
         
         return (
-          <span key={i} className={`relative inline-block mr-[0.25em] mb-[0.2em] ${textStyle}`}>
-            <span className="invisible">{w.word}</span>
-            <span className="absolute top-0 left-0 w-full text-center">{displayWords[i] || ''}</span>
+          <span key={i}>
+            <span className={`relative inline-block mb-[0.2em] ${textStyle}`}>
+              <span className="invisible">{w.word}</span>
+              <span className="absolute top-0 left-0 w-full text-center">{displayWords[i] || ''}</span>
+            </span>
+            {' '}
           </span>
         );
       })}
@@ -240,22 +243,52 @@ function BlurText({ words }: { words: FormattedWord[] }) {
         if (w.format === 'italic') textStyle = "italic text-gray-500";
 
         return (
-          <motion.span
-            key={i}
-            initial={{ filter: 'blur(12px)', opacity: 0 }}
-            animate={isInView ? { filter: 'blur(0px)', opacity: 1 } : {}}
-            transition={{ delay: i * 0.05, duration: 0.8, ease: "easeOut" }}
-            className={`inline-block mr-[0.25em] mb-[0.1em] ${textStyle}`}
-          >
-            {w.word}
-          </motion.span>
+          <span key={i}>
+            <motion.span
+              initial={{ filter: 'blur(12px)', opacity: 0 }}
+              animate={isInView ? { filter: 'blur(0px)', opacity: 1 } : {}}
+              transition={{ delay: i * 0.05, duration: 0.8, ease: "easeOut" }}
+              className={`inline-block mb-[0.1em] ${textStyle}`}
+            >
+              {w.word}
+            </motion.span>
+            {' '}
+          </span>
         );
       })}
     </span>
   );
 }
 
-// --- 4. MAGNETIC BUTTON ---
+// --- 4. TEXT EFFECT SLIDE ---
+function SlideText({ text }: { text: string }) {
+  return (
+    <motion.h2 
+      className="text-3xl md:text-5xl font-serif text-gray-900 mb-10 md:mb-16 flex flex-wrap"
+      initial="hidden"
+      animate="visible"
+      variants={{
+        hidden: { opacity: 0 },
+        visible: { opacity: 1, transition: { staggerChildren: 0.04 } }
+      }}
+    >
+      {text.split("").map((char, i) => (
+        <motion.span
+          key={i}
+          className="inline-block whitespace-pre"
+          variants={{
+            hidden: { y: 20, opacity: 0, filter: 'blur(4px)' },
+            visible: { y: 0, opacity: 1, filter: 'blur(0px)', transition: { type: 'spring', damping: 12, stiffness: 150 } }
+          }}
+        >
+          {char}
+        </motion.span>
+      ))}
+    </motion.h2>
+  );
+}
+
+// --- 5. MAGNETIC BUTTON ---
 function MagneticButton({ children, href }: { children: React.ReactNode, href: string }) {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const handleMouse = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -281,7 +314,7 @@ function MagneticButton({ children, href }: { children: React.ReactNode, href: s
   );
 }
 
-// --- 5. IN-VIEW MASONRY IMAGE WITH MOBILE ADAPTATION ---
+// --- 6. IN-VIEW MASONRY IMAGE ---
 function MasonryImage({ 
   src, alt, setCursorText, onImageClick
 }: { 
@@ -289,6 +322,7 @@ function MasonryImage({
 }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
+  const [isLoaded, setIsLoaded] = useState(false);
 
   return (
     <motion.div
@@ -299,19 +333,20 @@ function MasonryImage({
       initial={{ opacity: 0, y: 40, filter: 'blur(10px)' }}
       animate={isInView ? { opacity: 1, y: 0, filter: 'blur(0px)' } : {}}
       transition={{ duration: 0.8, ease: "easeOut" }}
-      // Adjusted bottom margin for 2-column mobile layout
-      className="relative w-full mb-3 md:mb-6 break-inside-avoid overflow-hidden rounded-xl cursor-none group shadow-sm hover:shadow-md transition-shadow duration-300"
+      className="relative w-full mb-3 md:mb-6 break-inside-avoid overflow-hidden rounded-xl cursor-none group shadow-sm hover:shadow-md transition-shadow duration-300 bg-gray-100"
     >
+      <div className={`absolute inset-0 bg-gray-200 transition-opacity duration-1000 ease-in-out ${isLoaded ? 'opacity-0' : 'opacity-100 animate-pulse'}`} />
+
       <img 
         src={getCDNImage(src, 800)} 
         alt={alt} 
         loading="lazy" 
         decoding="async" 
-        className="w-full h-auto block bg-gray-50" 
+        onLoad={() => setIsLoaded(true)}
+        className={`relative z-10 w-full h-auto block transition-opacity duration-1000 ease-in-out ${isLoaded ? 'opacity-100' : 'opacity-0'}`} 
       />
       
-      {/* PROGRESSIVE BLUR LAYER - Opacity 100 on Mobile by default, hover on Desktop */}
-      <div className="absolute inset-x-0 bottom-0 h-1/2 pointer-events-none flex flex-col justify-end">
+      <div className="absolute inset-x-0 bottom-0 h-1/2 pointer-events-none flex flex-col justify-end z-20">
         <div 
           className="absolute inset-0 z-0 opacity-100 md:opacity-0 group-hover:opacity-100 backdrop-blur-[12px] md:backdrop-blur-[16px] transition-all duration-500 ease-out"
           style={{
@@ -323,7 +358,6 @@ function MasonryImage({
           <span className="text-white font-sans font-medium tracking-wide text-xs md:text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] truncate pr-2">
             {alt}
           </span>
-          {/* THE MOBILE CURSOR MIMIC BADGE */}
           <span className="md:hidden flex-shrink-0 bg-black/45 backdrop-blur-md text-white px-2.5 py-1 rounded-full text-[9px] font-sans tracking-wider border border-white/20 shadow-sm">
             + More
           </span>
@@ -333,7 +367,53 @@ function MasonryImage({
   );
 }
 
-// --- 6. INFINITE SLIDER WITH MOBILE ADAPTATION ---
+// --- 6B. SLIDER ITEM ---
+function SliderItem({ 
+  img, setCursorText, onImageClick 
+}: { 
+  img: CollectionImage, setCursorText: (text: string) => void, onImageClick: (src: string) => void 
+}) {
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  return (
+    <div 
+      onClick={() => onImageClick(img.src)}
+      onMouseEnter={() => setCursorText("+ More")}
+      onMouseLeave={() => setCursorText("")}
+      className="relative h-[250px] md:h-[500px] aspect-[4/5] flex-shrink-0 rounded-xl md:rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-500 cursor-none bg-gray-100 group"
+    >
+      <div className={`absolute inset-0 bg-gray-200 transition-opacity duration-1000 ease-in-out ${isLoaded ? 'opacity-0' : 'opacity-100 animate-pulse'}`} />
+
+      <img 
+        src={getCDNImage(img.src, 600)} 
+        alt={img.title} 
+        decoding="async"
+        onLoad={() => setIsLoaded(true)}
+        className={`relative z-10 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${isLoaded ? 'opacity-100' : 'opacity-0'}`} 
+      />
+      
+      <div className="absolute inset-x-0 bottom-0 h-1/2 pointer-events-none flex flex-col justify-end z-20">
+        <div 
+          className="absolute inset-0 z-0 opacity-100 md:opacity-0 group-hover:opacity-100 backdrop-blur-[16px] md:backdrop-blur-[24px] transition-all duration-500 ease-out"
+          style={{
+            maskImage: 'linear-gradient(to top, black 10%, transparent 100%)',
+            WebkitMaskImage: 'linear-gradient(to top, black 10%, transparent 100%)'
+          }}
+        />
+        <div className="relative z-20 p-4 md:p-8 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out flex justify-between items-end">
+          <span className="text-white font-sans font-medium tracking-wider text-xs md:text-lg drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] truncate pr-2">
+            {img.title}
+          </span>
+          <span className="md:hidden flex-shrink-0 bg-black/45 backdrop-blur-md text-white px-3 py-1.5 rounded-full text-[10px] font-sans tracking-wider border border-white/20 shadow-sm">
+            + More
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// --- 7. INFINITE SLIDER (Perfect CSS Math Breakout) ---
 function InfiniteSlider({ 
   images, setCursorText, onImageClick
 }: { 
@@ -346,57 +426,31 @@ function InfiniteSlider({
 
   return (
     <div 
-      className="w-full mt-20 mb-10 overflow-hidden py-10 relative cursor-none"
+      // Breaks out of the parent padding (p-6 / md:p-8) to touch the true screen edge, ignoring scrollbar widths!
+      className="w-[calc(100%+3rem)] md:w-[calc(100%+4rem)] -ml-6 md:-ml-8 mt-10 md:mt-20 mb-10 overflow-hidden py-10 cursor-none"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => { setIsHovered(false); setCursorText(""); }}
     >
       <motion.div
-        className="flex gap-4 md:gap-6 min-w-max px-3"
-        animate={{ x: ["0%", "-33.33%"] }}
+        // Added pr-4 md:pr-6 so the gap mathematics loop perfectly without a jump
+        className="flex gap-4 md:gap-6 pr-4 md:pr-6 min-w-max"
+        animate={{ x: ["0%", "-33.333333%"] }}
         transition={{ duration: isHovered ? 80 : 20, ease: "linear", repeat: Infinity }}
       >
         {duplicatedImages.map((img, index) => (
-          <div 
+          <SliderItem 
             key={index} 
-            onClick={() => onImageClick(img.src)}
-            onMouseEnter={() => setCursorText("+ More")}
-            onMouseLeave={() => setCursorText("")}
-            className="relative h-[250px] md:h-[500px] aspect-[4/5] flex-shrink-0 rounded-xl md:rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-500 cursor-none bg-gray-50 group"
-          >
-            <img 
-              src={getCDNImage(img.src, 600)} 
-              alt={img.title} 
-              decoding="async" 
-              className="w-full h-full object-cover" 
-            />
-            
-            {/* PROGRESSIVE BLUR LAYER - Opacity 100 on Mobile by default, hover on Desktop */}
-            <div className="absolute inset-x-0 bottom-0 h-1/2 pointer-events-none flex flex-col justify-end">
-              <div 
-                className="absolute inset-0 z-0 opacity-100 md:opacity-0 group-hover:opacity-100 backdrop-blur-[16px] md:backdrop-blur-[24px] transition-all duration-500 ease-out"
-                style={{
-                  maskImage: 'linear-gradient(to top, black 10%, transparent 100%)',
-                  WebkitMaskImage: 'linear-gradient(to top, black 10%, transparent 100%)'
-                }}
-              />
-              <div className="relative z-20 p-4 md:p-8 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out flex justify-between items-end">
-                <span className="text-white font-sans font-medium tracking-wider text-xs md:text-lg drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] truncate pr-2">
-                  {img.title}
-                </span>
-                {/* THE MOBILE CURSOR MIMIC BADGE */}
-                <span className="md:hidden flex-shrink-0 bg-black/45 backdrop-blur-md text-white px-3 py-1.5 rounded-full text-[10px] font-sans tracking-wider border border-white/20 shadow-sm">
-                  + More
-                </span>
-              </div>
-            </div>
-          </div>
+            img={img} 
+            setCursorText={setCursorText} 
+            onImageClick={onImageClick} 
+          />
         ))}
       </motion.div>
     </div>
   );
 }
 
-// --- 7. COLLECTION ACCORDION COMPONENT (Mobile Optimized Grid) ---
+// --- 8. COLLECTION ACCORDION COMPONENT ---
 function CollectionAccordion({ 
   collection, setCursorText, onImageClick 
 }: { 
@@ -434,7 +488,6 @@ function CollectionAccordion({
             transition={{ duration: 0.4, ease: [0.04, 0.62, 0.23, 0.98] }}
             className="overflow-hidden"
           >
-            {/* 2-Columns on Mobile, Gaps reduced */}
             <div className="columns-2 md:columns-3 lg:columns-3 gap-3 md:gap-6 pt-6 pb-10 px-1 md:px-2">
               {collection.images.map((img, index) => (
                 <MasonryImage
@@ -461,6 +514,12 @@ export default function App() {
   const [currentView, setCurrentView] = useState<'home' | 'collections'>('home');
   const [cursorText, setCursorText] = useState("");
   const [selectedArtwork, setSelectedArtwork] = useState<string | null>(null);
+  
+  const [isModalImageLoaded, setIsModalImageLoaded] = useState(false);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, [currentView]);
 
   const [featuredSliderImages] = useState<CollectionImage[]>(() => {
     const selectedCollection = ARCHIVE_COLLECTIONS.find(c => c.id === FEATURED_COLLECTION_ID) || ARCHIVE_COLLECTIONS[0];
@@ -472,6 +531,11 @@ export default function App() {
     const shuffledImages = shuffleArray(allAvailableImages);
     return shuffledImages.slice(0, 8);
   });
+
+  const handleArtworkSelect = (src: string) => {
+    setIsModalImageLoaded(false); 
+    setSelectedArtwork(src);      
+  };
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -520,7 +584,7 @@ export default function App() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-white/85 backdrop-blur-sm"
+              className="absolute inset-0 bg-white/90 backdrop-blur-md"
               onClick={() => { setSelectedArtwork(null); setCursorText(""); }}
               onMouseEnter={() => setCursorText("Close")}
               onMouseLeave={() => setCursorText("")}
@@ -533,11 +597,17 @@ export default function App() {
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
               className="relative z-10 w-full h-[90vh] flex flex-col items-center justify-center p-4 pointer-events-none"
             >
-                <div className="w-full h-[80%] flex items-center justify-center overflow-hidden">
+                <div className="w-full h-[80%] flex items-center justify-center relative">
+                   {!isModalImageLoaded && (
+                     <div className="absolute inset-0 flex items-center justify-center">
+                       <div className="w-8 h-8 md:w-10 md:h-10 border-4 border-gray-200 border-t-gray-800 rounded-full animate-spin" />
+                     </div>
+                   )}
                    <img 
                      src={getCDNImage(selectedArtwork, 1600)} 
                      alt="Expanded Artwork" 
                      decoding="async"
+                     onLoad={() => setIsModalImageLoaded(true)}
                      onClick={(e) => {
                        e.stopPropagation();
                        if (currentView === 'home') {
@@ -551,7 +621,7 @@ export default function App() {
                      }}
                      onMouseEnter={() => setCursorText(currentView === 'home' ? "View Collection" : "Close")}
                      onMouseLeave={() => setCursorText("")}
-                     className="max-h-full max-w-full object-contain shadow-2xl cursor-none pointer-events-auto" 
+                     className={`max-h-full max-w-full object-contain shadow-2xl cursor-none pointer-events-auto transition-opacity duration-700 ${isModalImageLoaded ? 'opacity-100' : 'opacity-0'}`} 
                    />
                 </div>
                 
@@ -575,15 +645,17 @@ export default function App() {
       {/* --- CONDITIONAL VIEWS --- */}
       {currentView === 'home' ? (
         <>
-          <div className="max-w-2xl mt-16 md:mt-24 mb-10 w-full text-center">
-            <h1 className="text-xl md:text-3xl leading-relaxed tracking-wide font-normal">
-              <ScrambledText words={welcomeWords} />
-            </h1>
+          <div className="w-full mt-16 md:mt-24 mb-10 flex justify-center px-2 md:px-4">
+            <div className="w-full">
+              <h1 className="text-xl md:text-3xl leading-relaxed tracking-wide font-normal text-justify">
+                <ScrambledText words={welcomeWords} />
+              </h1>
+            </div>
           </div>
 
-          <div className="w-full max-w-[100vw] flex flex-col items-center mt-8 md:mt-12">
-            <span className="text-[10px] md:text-xs font-sans tracking-widest text-gray-400 uppercase">Featured Works</span>
-            <InfiniteSlider images={featuredSliderImages} setCursorText={setCursorText} onImageClick={setSelectedArtwork} />
+          <div className="w-full flex flex-col mt-8 md:mt-12">
+            <span className="text-center text-[10px] md:text-xs font-sans tracking-widest text-gray-400 uppercase">Featured Works</span>
+            <InfiniteSlider images={featuredSliderImages} setCursorText={setCursorText} onImageClick={handleArtworkSelect} />
           </div>
 
           <div className="mt-20 md:mt-32 w-full max-w-6xl px-2 md:px-4">
@@ -591,24 +663,23 @@ export default function App() {
               <span className="text-[10px] md:text-xs font-sans tracking-widest text-gray-400 uppercase">Experimental Archive</span>
             </div>
             
-            {/* 2-Columns on Mobile Layout */}
             <div className="columns-2 md:columns-3 lg:columns-3 gap-3 md:gap-6">
               {randomMasonryImages.map((art, index) => (
-                <MasonryImage key={index} src={art.src} alt={art.title} setCursorText={setCursorText} onImageClick={setSelectedArtwork} />
+                <MasonryImage key={index} src={art.src} alt={art.title} setCursorText={setCursorText} onImageClick={handleArtworkSelect} />
               ))}
             </div>
           </div>
 
           <div className="mt-32 md:mt-40 mb-32 md:mb-40 flex flex-col items-center justify-center w-full max-w-3xl text-center px-4">
             <h2 className="text-[10px] md:text-sm font-sans tracking-widest text-gray-400 uppercase mb-8">About the Artist</h2>
-            <p className="text-xl md:text-3xl font-serif text-gray-700 leading-relaxed">
+            <p className="text-xl md:text-3xl font-serif text-gray-700 leading-relaxed text-justify">
               <BlurText words={aboutWords} />
             </p>
           </div>
 
           <div className="mt-10 mb-20 md:mb-32 flex flex-col items-center">
             <p className="text-gray-400 font-sans mb-8 text-sm md:text-base">Have an idea in mind?</p>
-            <MagneticButton href="mailto:hello@example.com">Let's Talk Design</MagneticButton>
+            <MagneticButton href="mailto:hm1tsv@gmail.com">Let's Talk Design</MagneticButton>
           </div>
         </>
       ) : (
@@ -627,7 +698,7 @@ export default function App() {
             <span className="font-sans text-xs md:text-sm tracking-widest uppercase">Return to Gallery</span>
           </button>
 
-          <h2 className="text-3xl md:text-5xl font-serif text-gray-900 mb-10 md:mb-16">Collections</h2>
+          <SlideText text="Collections" />
 
           <div className="w-full flex flex-col">
             {ARCHIVE_COLLECTIONS.map((collection) => (
@@ -635,7 +706,7 @@ export default function App() {
                  key={collection.id} 
                  collection={collection} 
                  setCursorText={setCursorText} 
-                 onImageClick={setSelectedArtwork}
+                 onImageClick={handleArtworkSelect}
                />
             ))}
           </div>
