@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useMemo } from 'react';
 import { motion, useInView, AnimatePresence } from 'framer-motion';
 
 // --- DATA TYPES & TEXT SIZES ---
@@ -13,6 +13,7 @@ type CollectionImage = {
 type CollectionData = { 
   id: string; 
   title: string; 
+  description?: string; // New field added for the collection description
   images: CollectionImage[]; 
 };
 
@@ -39,110 +40,26 @@ function getCDNImage(src: string, width: number = 800) {
   return src;
 }
 
-// --- DATA: ARCHIVE COLLECTIONS ---
-const ARCHIVE_COLLECTIONS: CollectionData[] = [
-  {
-    id: '2k26wrks',
-    title: '2k26wrks',
-    images: [
-      { src: "/artworks/2k26_wrks/ciaccona.png", title: "Ciaccona", description: "when algebra meets rythm." },
-      { src: "/artworks/2k26_wrks/cosette.png", title: "Cosette", description: "little rascal be actin' tuff sometimes." },
-      { src: "/artworks/2k26_wrks/lewis.png", title: "Lewis", description: "how does this complex mechanical warlord firearm have such tender feel to it?" },
-      { src: "/artworks/2k26_wrks/maruzen.png", title: "Maruzensky",  description: "run till you break the sound barrier of simulation." },
-      { src: "/artworks/2k26_wrks/ots14.png", title: "OTS-14",  description: "never hurt my fine lady, look what happened to him now." },
-      { src: "/artworks/2k26_wrks/pulchra.png", title: "Pulchra",  description: "pulchra is a british underground rapper who broke into the public sphere with the release of his album, sons of calydon." },
-    ]
-  },
-  {
-    id: 'archive25',
-    title: 'archive25',
-    images: [
-      { src: "/artworks/archive25/ache.jpg", title: "Acheron" , description: "what the fuck did i even make, prob im on some weed or smth." },
-      { src: "/artworks/archive25/chrome.jpg", title: "ChromAbstract",  description: "me first edit using photoshop on shitty potato device." },
-      { src: "/artworks/archive25/encore.jpg", title: "Encore", description: "12 hours spend on sculpting + rendering the 3d flame icon like just kms atp bru." },
-      { src: "/artworks/archive25/firefly.jpg", title: "Firefly", description: "first actual good edit bcs learning micro layouting technique." },
-      { src: "/artworks/archive25/hkt.jpg", title: "Hakaty", description: "first tagwall edit in desktop environment, i also quite interested on the design of this char it just soo cool." },
-      { src: "/artworks/archive25/hugo.jpg", title: "Hugo", description: "burnout waste, experimenting new texturing technique." },
-      { src: "/artworks/archive25/kafka.jpg", title: "Kafka", description: "i actually planned this to be a tcg design, but i could never do that in the end, but it turned out decently good anyways." },
-      { src: "/artworks/archive25/lagrange.jpg", title: "Lagrange", description: "cleanest ipx edit im making thoughts? my first and last tagwall host thingy." },
-      { src: "/artworks/archive25/maid.jpg", title: "Ancilla", description: "fun fact: this work are reviewed by my teach when im 11th grader, and he breakdowns the whole psd on every assets/elemnt i use." },
-      { src: "/artworks/archive25/marin.jpg", title: "Marine", description: "mf tryna vintage while hes born on 00s." },
-      { src: "/artworks/archive25/mart.jpg", title: "March7", description: "my best ipx design so far, and my starting 'damaged style' arc ." },
-      { src: "/artworks/archive25/susei.jpg", title: "Suisei", description: "im rushing this in like 30 mins before deadline, second subs in 1 tagwall." },
-      { src: "/artworks/archive25/wt60.jpg", title: "Wooting60", description: "school work to design product promotion." },
-    ]
-  },
-  {
-    id: 'makeupBA',
-    title: 'SLClubDisc',
-    images: [
-      { src: "/artworks/slcdisc/1.jpg", title: "makeupDisc_open", description: "placeholder." },
-      { src: "/artworks/slcdisc/2.jpg", title: "makeupDisc_azusa", description: "test." },
-      { src: "/artworks/slcdisc/3.jpg", title: "makeupDisc_hanako", description: "test." },
-      { src: "/artworks/slcdisc/4.jpg", title: "makeupDisc_hifumi", description: "test." },
-      { src: "/artworks/slcdisc/5.jpg", title: "makeupDisc_koharu", description: "test." },
-      { src: "/artworks/slcdisc/6.jpg", title: "makeupDisc_close", description: "placeholder." },
-    ]
-  },
-  {
-    id: 'gamecollab',
-    title: 'JohnBrineCollab',
-    images: [
-      { src: "/artworks/johnbrine/1.jpg", title: "JohnBrine", description: "based on mythical entities that said to be lurking on older version of the respective game." },
-      { src: "/artworks/johnbrine/2.jpg", title: "JohnBrineAlt1", description: "JohnBrine's alternative color scheme." },
-      { src: "/artworks/johnbrine/3.jpg", title: "JohnBrineAlt2", description: "JohnBrine's alternative color scheme." },
-      { src: "/artworks/johnbrine/4.jpg", title: "JohnBrineAlt3", description: "JohnBrine's alternative color scheme." },
-    ]
-  },
-  {
-    id: 'evecos',
-    title: 'evecos',
-    images: [
-      { src: "/artworks/evecos/1.jpg", title: "eveCosplay", description: "my favorite clingy lovable lavender scented agent, is actually real?." },
-      { src: "/artworks/evecos/2.jpg", title: "eveCosplay1", description: "eveCosplay's alternative color scheme." },
-      { src: "/artworks/evecos/3.jpg", title: "eveCosplay2", description: "eveCosplay's alternative color scheme." },
-      { src: "/artworks/evecos/4.jpg", title: "eveCosplay3", description: "eveCosplay's alternative color scheme." },
-    ]
-  },
-  {
-    id: 'twt13',
-    title: 'twitter_banner',
-    images: [
-      { src: "/artworks/twt13/1.jpg", title: "photonLeak.twtBanner", description: "the pstouch era of hm1tsu, the lore behind it far more darker that you thought it would be." },
-      { src: "/artworks/twt13/2.jpg", title: "photonLeak.twtBanner", description: "the pstouch era of hm1tsu, the lore behind it far more darker that you thought it would be." },
-      { src: "/artworks/twt13/3.jpg", title: "photonLeak.twtBanner", description: "the pstouch era of hm1tsu, the lore behind it far more darker that you thought it would be." },
-      { src: "/artworks/twt13/4.jpg", title: "photonLeak.twtBanner", description: "the pstouch era of hm1tsu, the lore behind it far more darker that you thought it would be." },
-      { src: "/artworks/twt13/5.jpg", title: "photonLeak.twtBanner", description: "the pstouch era of hm1tsu, the lore behind it far more darker that you thought it would be." },
-      { src: "/artworks/twt13/6.jpg", title: "photonLeak.twtBanner", description: "the pstouch era of hm1tsu, the lore behind it far more darker that you thought it would be." },
-      { src: "/artworks/twt13/7.jpg", title: "photonLeak.twtBanner", description: "the pstouch era of hm1tsu, the lore behind it far more darker that you thought it would be." },
-      { src: "/artworks/twt13/8.jpg", title: "photonLeak.twtBanner", description: "the pstouch era of hm1tsu, the lore behind it far more darker that you thought it would be." },
-    ]
-  },
-  {
-    id: 'arcaeatix',
-    title: 'arcaeaTicket',
-    images: [
-      { src: "/artworks/arcaeatx/aglskr.png", title: "Aegleseeker", description: "did you know? the only time hm1tsu ever using alight motion to make design are this." },
-      { src: "/artworks/arcaeatx/feef.png", title: "FracturedRay", description: "did you know? the only time hm1tsu ever using alight motion to make design are this." },
-      { src: "/artworks/arcaeatx/tempe.png", title: "Tempestissimo", description: "did you know? the only time hm1tsu ever using alight motion to make design are this." },
-    ]
-  },
-  {
-    id: 'others',
-    title: 'others',
-    images: [
-      { src: "/artworks/cal.jpg", title: "sCalMaid" },
-      { src: "/artworks/eve.jpg", title: "ratCore.Evelyn" },
-      { src: "/artworks/exa.jpg", title: "Exasperation" },
-      { src: "/artworks/flame2.jpg", title: "Jeanne" },
-      { src: "/artworks/flamew.jpg", title: "FlameWall" },
-      { src: "/artworks/mare.jpg", title: "Marenol" },
-      { src: "/artworks/mcedit.jpg", title: "c4d_mc" },
-      { src: "/artworks/mel.jpg", title: "Melania" },
-      { src: "/artworks/sanhua13.jpg", title: "SanhuaCollab" },
-    ]
+// --- ROBUST CSV PARSER ---
+// Safely parses CSV text, respecting commas placed inside double quotes.
+function parseCSV(str: string) {
+  const arr: string[][] = [];
+  let quote = false;
+  let row = 0, col = 0;
+  for (let c = 0; c < str.length; c++) {
+      const cc = str[c], nc = str[c+1];
+      arr[row] = arr[row] || [];
+      arr[row][col] = arr[row][col] || '';
+      if (cc == '"' && quote && nc == '"') { arr[row][col] += cc; ++c; continue; }
+      if (cc == '"') { quote = !quote; continue; }
+      if (cc == ',' && !quote) { ++col; continue; }
+      if (cc == '\r' && nc == '\n' && !quote) { ++row; col = 0; ++c; continue; }
+      if (cc == '\n' && !quote) { ++row; col = 0; continue; }
+      if (cc == '\r' && !quote) { ++row; col = 0; continue; }
+      arr[row][col] += cc;
   }
-];
+  return arr;
+}
 
 function shuffleArray<T>(array: T[]): T[] {
   const newArr = [...array];
@@ -354,7 +271,7 @@ function MagneticButton({ children, href }: { children: React.ReactNode, href: s
     setIsRedirecting(true);
     
     setTimeout(() => {
-      window.location.href = href;
+      window.open(href, '_blank', 'noopener,noreferrer');
       setIsRedirecting(false);
     }, 2000);
   };
@@ -368,7 +285,7 @@ function MagneticButton({ children, href }: { children: React.ReactNode, href: s
       animate={{ x: position.x, y: position.y }}
       transition={{ type: "spring", stiffness: 150, damping: 15, mass: 0.1 }}
       className="inline-flex px-10 py-4 bg-gray-900 rounded-full cursor-none relative items-center justify-center hover:bg-black transition-colors overflow-hidden text-white"
-    >
+>
       {isRedirecting ? (
         <TextShimmer duration={1.2} className="relative z-10 font-sans tracking-wide text-sm font-medium">
           Redirecting...
@@ -378,7 +295,7 @@ function MagneticButton({ children, href }: { children: React.ReactNode, href: s
           {children}
         </span>
       )}
-    </motion.a>
+    </motion.a> 
   );
 }
 
@@ -554,7 +471,8 @@ function CollectionAccordion({
             transition={{ duration: 0.4, ease: [0.04, 0.62, 0.23, 0.98] }}
             className="overflow-hidden"
           >
-            <div className="columns-2 md:columns-3 lg:columns-3 gap-3 md:gap-6 pt-6 pb-10 px-1 md:px-2">
+            {/* Grid Layout */}
+            <div className="columns-2 md:columns-3 lg:columns-3 gap-3 md:gap-6 pt-6 pb-6 px-1 md:px-2">
               {collection.images.map((img, index) => (
                 <MasonryImage
                   key={index}
@@ -564,6 +482,15 @@ function CollectionAccordion({
                 />
               ))}
             </div>
+            
+            {/* Collection Description Displayed Underneath */}
+            {collection.description && (
+              <div className="pt-6 pb-10 mb-2 border-t border-gray-100 px-2 flex justify-start">
+                <p className="text-gray-500 font-sans text-sm md:text-base tracking-wide leading-relaxed max-w-3xl border-l-2 border-gray-800 pl-4">
+                  {collection.description}
+                </p>
+              </div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>
@@ -579,26 +506,73 @@ export default function App() {
   const [currentView, setCurrentView] = useState<'home' | 'collections'>('home');
   const [cursorText, setCursorText] = useState("");
   const [selectedArtwork, setSelectedArtwork] = useState<CollectionImage | null>(null);
-  
   const [isModalImageLoaded, setIsModalImageLoaded] = useState(false);
+  
+  // --- NEW: ASYNC DATA STATE ---
+  const [archiveCollections, setArchiveCollections] = useState<CollectionData[]>([]);
+  const [isLoadingData, setIsLoadingData] = useState(true);
+
+  // --- DATA FETCHING EFFECT ---
+  useEffect(() => {
+    fetch('/collections.csv')
+      .then(response => {
+        if (!response.ok) throw new Error("Network response was not ok");
+        return response.text();
+      })
+      .then(csvText => {
+        const rows = parseCSV(csvText).slice(1); // Parse and skip header
+        
+        // Group rows by Collection ID
+        const collectionsMap = new Map<string, CollectionData>();
+        
+        rows.forEach(row => {
+          if (row.length < 5) return; // Skip broken or empty rows
+          const [colId, colTitle, colDesc, imgSrc, imgTitle, imgDesc] = row;
+          
+          if (!collectionsMap.has(colId)) {
+            collectionsMap.set(colId, {
+              id: colId,
+              title: colTitle,
+              description: colDesc || undefined,
+              images: []
+            });
+          }
+          
+          collectionsMap.get(colId)!.images.push({
+            src: imgSrc,
+            title: imgTitle,
+            description: imgDesc || undefined
+          });
+        });
+
+        setArchiveCollections(Array.from(collectionsMap.values()));
+        setIsLoadingData(false);
+      })
+      .catch(error => {
+        console.error("Failed to load CSV:", error);
+        setIsLoadingData(false);
+      });
+  }, []);
+
+  // Use useMemo so sliders dynamically react when the CSV data loads
+  const featuredSliderImages = useMemo(() => {
+    if (!archiveCollections.length) return [];
+    const selectedCollection = archiveCollections.find(c => c.id === FEATURED_COLLECTION_ID) || archiveCollections[0];
+    return selectedCollection.images;
+  }, [archiveCollections]);
+
+  const randomMasonryImages = useMemo(() => {
+    if (!archiveCollections.length) return [];
+    const allAvailableImages = archiveCollections.flatMap(collection => collection.images);
+    const filteredImages = allAvailableImages.filter(
+      img => !featuredSliderImages.some(featuredImg => featuredImg.src === img.src)
+    );
+    return shuffleArray(filteredImages).slice(0, 8);
+  }, [archiveCollections, featuredSliderImages]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
   }, [currentView]);
-
-  const [featuredSliderImages] = useState<CollectionImage[]>(() => {
-    const selectedCollection = ARCHIVE_COLLECTIONS.find(c => c.id === FEATURED_COLLECTION_ID) || ARCHIVE_COLLECTIONS[0];
-    return selectedCollection.images;
-  });
-
-  const [randomMasonryImages] = useState<CollectionImage[]>(() => {
-    const allAvailableImages = ARCHIVE_COLLECTIONS.flatMap(collection => collection.images);
-    const filteredImages = allAvailableImages.filter(
-      img => !featuredSliderImages.some(featuredImg => featuredImg.src === img.src)
-    );
-    const shuffledImages = shuffleArray(filteredImages);
-    return shuffledImages.slice(0, 8);
-  });
 
   const handleArtworkSelect = (img: CollectionImage) => {
     setIsModalImageLoaded(false); 
@@ -632,6 +606,14 @@ export default function App() {
     { word: "experimental", format: "italic" }, { word: "ideas" }, { word: "and" }, { word: "digital" }, { word: "craftsmanship" },
     { word: "come" }, { word: "together." }
   ];
+
+  if (isLoadingData) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-gray-200 border-t-gray-800 rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white text-gray-700 font-serif p-6 md:p-8 flex flex-col items-center justify-between relative overflow-x-hidden cursor-none select-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
@@ -747,7 +729,7 @@ export default function App() {
 
           <div className="mt-10 mb-20 md:mb-32 flex flex-col items-center">
             <p className="text-gray-400 font-sans mb-8 text-sm md:text-base">Have an idea in mind?</p>
-            <MagneticButton href="mailto:hm1tsv@gmail.com">Let's Talk Design</MagneticButton>
+            <MagneticButton href="https://mail.google.com/mail/?view=cm&fs=1&to=hm1tsv@gmail.com">Let's Talk Design</MagneticButton>
           </div>
         </>
       ) : (
@@ -769,7 +751,7 @@ export default function App() {
           <SlideText text="Collections" />
 
           <div className="w-full flex flex-col">
-            {ARCHIVE_COLLECTIONS.map((collection) => (
+            {archiveCollections.map((collection) => (
                <CollectionAccordion 
                  key={collection.id} 
                  collection={collection} 
