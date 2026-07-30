@@ -7,7 +7,7 @@ type FormattedWord = { word: string; format?: 'bold' | 'italic' | 'normal' };
 type CollectionImage = {
   src: string;
   title: string;
-  description?: string; // Added description field for your modal
+  description?: string; 
 };
 
 type CollectionData = { 
@@ -27,114 +27,104 @@ const CURSOR_WIDTHS: Record<string, number> = {
 
 // --- SMART CDN HELPER ---
 function getCDNImage(src: string, width: number = 800) {
-  // 1. If we are running locally, just load the raw image
   if (typeof window === 'undefined' || window.location.hostname === 'localhost') {
     return src;
   }
-
-  // 2. Netlify Auto-Detection
   if (window.location.hostname.includes('netlify.app')) {
     return `/.netlify/images?url=${encodeURIComponent(src)}&w=${width}&q=80`;
   }
-
-  // 3. Vercel Auto-Detection
-  // Note: If you add a custom domain (like hm1tsu.com) on Vercel later, 
-  // you can just change this to: if (window.location.hostname.includes('hm1tsu.com'))
   if (window.location.hostname.includes('vercel.app')) {
     return `/_vercel/image?url=${encodeURIComponent(src)}&w=${width}&q=80`;
   }
-
-  // 4. Safe Fallback
   return src;
 }
 
 // --- DATA: ARCHIVE COLLECTIONS ---
-// You can now add `description: "Your brief description here"` to any of these images!
 const ARCHIVE_COLLECTIONS: CollectionData[] = [
   {
     id: '2k26wrks',
     title: '2k26wrks',
     images: [
-      { src: "/artworks/2k26_wrks/ciaccona.png", title: "Ciaccona", description: "An experimental exploration of shape and sound." },
-      { src: "/artworks/2k26_wrks/cosette.png", title: "Cosette" },
-      { src: "/artworks/2k26_wrks/lewis.png", title: "Lewis" },
-      { src: "/artworks/2k26_wrks/maruzen.png", title: "Maruzen" },
-      { src: "/artworks/2k26_wrks/ots14.png", title: "OTS-14" },
-      { src: "/artworks/2k26_wrks/pulchra.png", title: "Pulchra" },
+      { src: "/artworks/2k26_wrks/ciaccona.png", title: "Ciaccona", description: "when algebra meets rythm." },
+      { src: "/artworks/2k26_wrks/cosette.png", title: "Cosette", description: "little rascal be actin' tuff sometimes." },
+      { src: "/artworks/2k26_wrks/lewis.png", title: "Lewis", description: "how does this complex mechanical warlord firearm have such tender feel to it?" },
+      { src: "/artworks/2k26_wrks/maruzen.png", title: "Maruzensky",  description: "run till you break the sound barrier of simulation." },
+      { src: "/artworks/2k26_wrks/ots14.png", title: "OTS-14",  description: "never hurt my fine lady, look what happened to him now." },
+      { src: "/artworks/2k26_wrks/pulchra.png", title: "Pulchra",  description: "pulchra is a british underground rapper who broke into the public sphere with the release of his album, sons of calydon." },
     ]
   },
   {
     id: 'archive25',
     title: 'archive25',
     images: [
-      { src: "/artworks/archive25/ache.jpg", title: "Acheron" },
-      { src: "/artworks/archive25/chrome.jpg", title: "ChromAbstract" },
-      { src: "/artworks/archive25/encore.jpg", title: "Encore" },
-      { src: "/artworks/archive25/firefly.jpg", title: "Firefly" },
-      { src: "/artworks/archive25/hkt.jpg", title: "Hakaty" },
-      { src: "/artworks/archive25/hugo.jpg", title: "Hugo" },
-      { src: "/artworks/archive25/kafka.jpg", title: "Kafka" },
-      { src: "/artworks/archive25/lagrange.jpg", title: "Lagrange" },
-      { src: "/artworks/archive25/maid.jpg", title: "Ancilla" },
-      { src: "/artworks/archive25/marin.jpg", title: "Marine" },
-      { src: "/artworks/archive25/mart.jpg", title: "March7" },
-      { src: "/artworks/archive25/susei.jpg", title: "Suisei" },
-      { src: "/artworks/archive25/wt60.jpg", title: "Wooting60" },
+      { src: "/artworks/archive25/ache.jpg", title: "Acheron" , description: "what the fuck did i even make, prob im on some weed or smth." },
+      { src: "/artworks/archive25/chrome.jpg", title: "ChromAbstract",  description: "me first edit using photoshop on shitty potato device." },
+      { src: "/artworks/archive25/encore.jpg", title: "Encore", description: "12 hours spend on sculpting + rendering the 3d flame icon like just kms atp bru." },
+      { src: "/artworks/archive25/firefly.jpg", title: "Firefly", description: "first actual good edit bcs learning micro layouting technique." },
+      { src: "/artworks/archive25/hkt.jpg", title: "Hakaty", description: "first tagwall edit in desktop environment, i also quite interested on the design of this char it just soo cool." },
+      { src: "/artworks/archive25/hugo.jpg", title: "Hugo", description: "burnout waste, experimenting new texturing technique." },
+      { src: "/artworks/archive25/kafka.jpg", title: "Kafka", description: "i actually planned this to be a tcg design, but i could never do that in the end, but it turned out decently good anyways." },
+      { src: "/artworks/archive25/lagrange.jpg", title: "Lagrange", description: "cleanest ipx edit im making thoughts? my first and last tagwall host thingy." },
+      { src: "/artworks/archive25/maid.jpg", title: "Ancilla", description: "fun fact: this work are reviewed by my teach when im 11th grader, and he breakdowns the whole psd on every assets/elemnt i use." },
+      { src: "/artworks/archive25/marin.jpg", title: "Marine", description: "mf tryna vintage while hes born on 00s." },
+      { src: "/artworks/archive25/mart.jpg", title: "March7", description: "my best ipx design so far, and my starting 'damaged style' arc ." },
+      { src: "/artworks/archive25/susei.jpg", title: "Suisei", description: "im rushing this in like 30 mins before deadline, second subs in 1 tagwall." },
+      { src: "/artworks/archive25/wt60.jpg", title: "Wooting60", description: "school work to design product promotion." },
     ]
   },
   {
     id: 'makeupBA',
     title: 'SLClubDisc',
     images: [
-      { src: "/artworks/slcdisc/1.jpg", title: "makeupDisc_open" },
-      { src: "/artworks/slcdisc/2.jpg", title: "makeupDisc_azusa" },
-      { src: "/artworks/slcdisc/3.jpg", title: "makeupDisc_hanako" },
-      { src: "/artworks/slcdisc/4.jpg", title: "makeupDisc_hifumi" },
-      { src: "/artworks/slcdisc/5.jpg", title: "makeupDisc_koharu" },
-      { src: "/artworks/slcdisc/6.jpg", title: "makeupDisc_close" },
+      { src: "/artworks/slcdisc/1.jpg", title: "makeupDisc_open", description: "placeholder." },
+      { src: "/artworks/slcdisc/2.jpg", title: "makeupDisc_azusa", description: "test." },
+      { src: "/artworks/slcdisc/3.jpg", title: "makeupDisc_hanako", description: "test." },
+      { src: "/artworks/slcdisc/4.jpg", title: "makeupDisc_hifumi", description: "test." },
+      { src: "/artworks/slcdisc/5.jpg", title: "makeupDisc_koharu", description: "test." },
+      { src: "/artworks/slcdisc/6.jpg", title: "makeupDisc_close", description: "placeholder." },
     ]
   },
   {
     id: 'gamecollab',
     title: 'JohnBrineCollab',
     images: [
-      { src: "/artworks/johnbrine/1.jpg", title: "JohnBrine" },
-      { src: "/artworks/johnbrine/2.jpg", title: "JohnBrineAlt1" },
-      { src: "/artworks/johnbrine/3.jpg", title: "JohnBrineAlt2" },
-      { src: "/artworks/johnbrine/4.jpg", title: "JohnBrineAlt3" },
+      { src: "/artworks/johnbrine/1.jpg", title: "JohnBrine", description: "based on mythical entities that said to be lurking on older version of the respective game." },
+      { src: "/artworks/johnbrine/2.jpg", title: "JohnBrineAlt1", description: "JohnBrine's alternative color scheme." },
+      { src: "/artworks/johnbrine/3.jpg", title: "JohnBrineAlt2", description: "JohnBrine's alternative color scheme." },
+      { src: "/artworks/johnbrine/4.jpg", title: "JohnBrineAlt3", description: "JohnBrine's alternative color scheme." },
     ]
   },
   {
     id: 'evecos',
     title: 'evecos',
     images: [
-      { src: "/artworks/evecos/1.jpg", title: "eveCosplay" },
-      { src: "/artworks/evecos/2.jpg", title: "eveCosplay1" },
-      { src: "/artworks/evecos/3.jpg", title: "eveCosplay2" },
-      { src: "/artworks/evecos/4.jpg", title: "eveCosplay3" },
+      { src: "/artworks/evecos/1.jpg", title: "eveCosplay", description: "my favorite clingy lovable lavender scented agent, is actually real?." },
+      { src: "/artworks/evecos/2.jpg", title: "eveCosplay1", description: "eveCosplay's alternative color scheme." },
+      { src: "/artworks/evecos/3.jpg", title: "eveCosplay2", description: "eveCosplay's alternative color scheme." },
+      { src: "/artworks/evecos/4.jpg", title: "eveCosplay3", description: "eveCosplay's alternative color scheme." },
     ]
   },
   {
     id: 'twt13',
     title: 'twitter_banner',
     images: [
-      { src: "/artworks/twt13/1.jpg", title: "acidLeak.twtBanner" },
-      { src: "/artworks/twt13/2.jpg", title: "acidLeak.twtBanner" },
-      { src: "/artworks/twt13/3.jpg", title: "acidLeak.twtBanner" },
-      { src: "/artworks/twt13/4.jpg", title: "acidLeak.twtBanner" },
-      { src: "/artworks/twt13/5.jpg", title: "acidLeak.twtBanner" },
-      { src: "/artworks/twt13/6.jpg", title: "acidLeak.twtBanner" },
-      { src: "/artworks/twt13/7.jpg", title: "acidLeak.twtBanner" },
-      { src: "/artworks/twt13/8.jpg", title: "acidLeak.twtBanner" },
+      { src: "/artworks/twt13/1.jpg", title: "photonLeak.twtBanner", description: "the pstouch era of hm1tsu, the lore behind it far more darker that you thought it would be." },
+      { src: "/artworks/twt13/2.jpg", title: "photonLeak.twtBanner", description: "the pstouch era of hm1tsu, the lore behind it far more darker that you thought it would be." },
+      { src: "/artworks/twt13/3.jpg", title: "photonLeak.twtBanner", description: "the pstouch era of hm1tsu, the lore behind it far more darker that you thought it would be." },
+      { src: "/artworks/twt13/4.jpg", title: "photonLeak.twtBanner", description: "the pstouch era of hm1tsu, the lore behind it far more darker that you thought it would be." },
+      { src: "/artworks/twt13/5.jpg", title: "photonLeak.twtBanner", description: "the pstouch era of hm1tsu, the lore behind it far more darker that you thought it would be." },
+      { src: "/artworks/twt13/6.jpg", title: "photonLeak.twtBanner", description: "the pstouch era of hm1tsu, the lore behind it far more darker that you thought it would be." },
+      { src: "/artworks/twt13/7.jpg", title: "photonLeak.twtBanner", description: "the pstouch era of hm1tsu, the lore behind it far more darker that you thought it would be." },
+      { src: "/artworks/twt13/8.jpg", title: "photonLeak.twtBanner", description: "the pstouch era of hm1tsu, the lore behind it far more darker that you thought it would be." },
     ]
   },
   {
     id: 'arcaeatix',
     title: 'arcaeaTicket',
     images: [
-      { src: "/artworks/arcaeatx/aglskr.png", title: "Aegleseeker" },
-      { src: "/artworks/arcaeatx/feef.png", title: "FracturedRay" },
-      { src: "/artworks/arcaeatx/tempe.png", title: "Tempestissimo" },
+      { src: "/artworks/arcaeatx/aglskr.png", title: "Aegleseeker", description: "did you know? the only time hm1tsu ever using alight motion to make design are this." },
+      { src: "/artworks/arcaeatx/feef.png", title: "FracturedRay", description: "did you know? the only time hm1tsu ever using alight motion to make design are this." },
+      { src: "/artworks/arcaeatx/tempe.png", title: "Tempestissimo", description: "did you know? the only time hm1tsu ever using alight motion to make design are this." },
     ]
   },
   {
@@ -305,28 +295,89 @@ function SlideText({ text }: { text: string }) {
   );
 }
 
+// --- TEXT SHIMMER COMPONENT ---
+function TextShimmer({ 
+  children, 
+  className = '', 
+  duration = 2 
+}: { 
+  children: string; 
+  className?: string; 
+  duration?: number 
+}) {
+  return (
+    <motion.span
+      className={`inline-block bg-clip-text text-transparent bg-[length:250%_100%] ${className}`}
+      style={{
+        backgroundImage:
+          'linear-gradient(110deg, rgba(255,255,255,0.25) 35%, rgba(255,255,255,1) 50%, rgba(255,255,255,0.25) 65%)',
+      }}
+      initial={{ backgroundPosition: '0% 0%' }}
+      animate={{ backgroundPosition: '100% 0%' }}
+      transition={{
+        repeat: Infinity,
+        duration,
+        ease: 'linear',
+      }}
+    >
+      {children}
+    </motion.span>
+  );
+}
+
 // --- 5. MAGNETIC BUTTON ---
 function MagneticButton({ children, href }: { children: React.ReactNode, href: string }) {
   const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [isRedirecting, setIsRedirecting] = useState(false);
+  const [isTouchDevice] = useState(() => 
+    typeof window !== 'undefined' && window.matchMedia("(pointer: coarse)").matches
+  );
+
   const handleMouse = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (isTouchDevice) return; 
     const { clientX, clientY } = e;
     const { height, width, left, top } = e.currentTarget.getBoundingClientRect();
     const middleX = clientX - (left + width / 2);
     const middleY = clientY - (top + height / 2);
     setPosition({ x: middleX * 0.2, y: middleY * 0.2 }); 
   };
-  const reset = () => setPosition({ x: 0, y: 0 });
+  
+  const reset = () => {
+    if (isTouchDevice) return;
+    setPosition({ x: 0, y: 0 });
+  };
+
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault(); 
+    if (isRedirecting) return;
+    
+    setIsRedirecting(true);
+    
+    setTimeout(() => {
+      window.location.href = href;
+      setIsRedirecting(false);
+    }, 2000);
+  };
 
   return (
     <motion.a
       href={href}
+      onClick={handleClick}
       onMouseMove={handleMouse}
       onMouseLeave={reset}
       animate={{ x: position.x, y: position.y }}
       transition={{ type: "spring", stiffness: 150, damping: 15, mass: 0.1 }}
-      className="inline-block px-10 py-4 bg-gray-900 text-white rounded-full font-sans tracking-wide text-sm hover:bg-black transition-colors cursor-none"
+      className="inline-flex px-10 py-4 bg-gray-900 rounded-full cursor-none relative items-center justify-center hover:bg-black transition-colors overflow-hidden text-white"
     >
-      {children}
+      {isRedirecting ? (
+        <TextShimmer duration={1.2} className="relative z-10 font-sans tracking-wide text-sm font-medium">
+          Redirecting...
+        </TextShimmer>
+      ) : (
+        <span className="relative z-10 inline-block font-sans tracking-wide text-sm font-medium">
+          {children}
+        </span>
+      )}
     </motion.a>
   );
 }
@@ -527,7 +578,6 @@ const FEATURED_COLLECTION_ID = '2k26wrks';
 export default function App() {
   const [currentView, setCurrentView] = useState<'home' | 'collections'>('home');
   const [cursorText, setCursorText] = useState("");
-  // Now storing the full CollectionImage object instead of just the URL string
   const [selectedArtwork, setSelectedArtwork] = useState<CollectionImage | null>(null);
   
   const [isModalImageLoaded, setIsModalImageLoaded] = useState(false);
@@ -543,12 +593,9 @@ export default function App() {
 
   const [randomMasonryImages] = useState<CollectionImage[]>(() => {
     const allAvailableImages = ARCHIVE_COLLECTIONS.flatMap(collection => collection.images);
-    
-    // FILTERS OUT ANY ARTWORK CURRENTLY IN THE FEATURED SLIDER
     const filteredImages = allAvailableImages.filter(
       img => !featuredSliderImages.some(featuredImg => featuredImg.src === img.src)
     );
-    
     const shuffledImages = shuffleArray(filteredImages);
     return shuffledImages.slice(0, 8);
   });
@@ -651,7 +698,6 @@ export default function App() {
                   onMouseEnter={() => setCursorText("Close")}
                   onMouseLeave={() => setCursorText("")}
                 >
-                    {/* DYNAMIC TITLE & DESCRIPTION OVERRIDE */}
                     <h3 className="text-xl md:text-2xl font-serif text-gray-900">
                        {selectedArtwork.title}
                     </h3>
