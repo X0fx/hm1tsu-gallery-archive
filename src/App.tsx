@@ -747,7 +747,7 @@ export default function App() {
 
           <div className="mt-10 mb-20 md:mb-32 flex flex-col items-center">
             <p className="text-gray-400 font-sans mb-8 text-sm md:text-base">Have an idea in mind?</p>
-            <MagneticButton href="mailto:hello@example.com">Let's Talk Design</MagneticButton>
+            <MagneticButton href="mailto:hm1tsv@gmail.com">Let's Talk Design</MagneticButton>
           </div>
         </>
       ) : (
