@@ -7,6 +7,7 @@ type FormattedWord = { word: string; format?: 'bold' | 'italic' | 'normal' };
 type CollectionImage = {
   src: string;
   title: string;
+  description?: string; // Added description field for your modal
 };
 
 type CollectionData = { 
@@ -24,21 +25,37 @@ const CURSOR_WIDTHS: Record<string, number> = {
   "View Collection": 140,
 };
 
-// --- NETLIFY CDN HELPER ---
+// --- SMART CDN HELPER ---
 function getCDNImage(src: string, width: number = 800) {
-  if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
+  // 1. If we are running locally, just load the raw image
+  if (typeof window === 'undefined' || window.location.hostname === 'localhost') {
     return src;
   }
-  return `/.netlify/images?url=${encodeURIComponent(src)}&w=${width}&q=80`;
+
+  // 2. Netlify Auto-Detection
+  if (window.location.hostname.includes('netlify.app')) {
+    return `/.netlify/images?url=${encodeURIComponent(src)}&w=${width}&q=80`;
+  }
+
+  // 3. Vercel Auto-Detection
+  // Note: If you add a custom domain (like hm1tsu.com) on Vercel later, 
+  // you can just change this to: if (window.location.hostname.includes('hm1tsu.com'))
+  if (window.location.hostname.includes('vercel.app')) {
+    return `/_vercel/image?url=${encodeURIComponent(src)}&w=${width}&q=80`;
+  }
+
+  // 4. Safe Fallback
+  return src;
 }
 
 // --- DATA: ARCHIVE COLLECTIONS ---
+// You can now add `description: "Your brief description here"` to any of these images!
 const ARCHIVE_COLLECTIONS: CollectionData[] = [
   {
     id: '2k26wrks',
     title: '2k26wrks',
     images: [
-      { src: "/artworks/2k26_wrks/ciaccona.png", title: "Ciaccona" },
+      { src: "/artworks/2k26_wrks/ciaccona.png", title: "Ciaccona", description: "An experimental exploration of shape and sound." },
       { src: "/artworks/2k26_wrks/cosette.png", title: "Cosette" },
       { src: "/artworks/2k26_wrks/lewis.png", title: "Lewis" },
       { src: "/artworks/2k26_wrks/maruzen.png", title: "Maruzen" },
@@ -316,9 +333,9 @@ function MagneticButton({ children, href }: { children: React.ReactNode, href: s
 
 // --- 6. IN-VIEW MASONRY IMAGE ---
 function MasonryImage({ 
-  src, alt, setCursorText, onImageClick
+  img, setCursorText, onImageClick
 }: { 
-  src: string, alt: string, setCursorText: (text: string) => void, onImageClick: (src: string) => void
+  img: CollectionImage, setCursorText: (text: string) => void, onImageClick: (img: CollectionImage) => void
 }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
@@ -327,7 +344,7 @@ function MasonryImage({
   return (
     <motion.div
       ref={ref}
-      onClick={() => onImageClick(src)}
+      onClick={() => onImageClick(img)}
       onMouseEnter={() => setCursorText("+ More")}
       onMouseLeave={() => setCursorText("")}
       initial={{ opacity: 0, y: 40, filter: 'blur(10px)' }}
@@ -338,8 +355,8 @@ function MasonryImage({
       <div className={`absolute inset-0 bg-gray-200 transition-opacity duration-1000 ease-in-out ${isLoaded ? 'opacity-0' : 'opacity-100 animate-pulse'}`} />
 
       <img 
-        src={getCDNImage(src, 800)} 
-        alt={alt} 
+        src={getCDNImage(img.src, 800)} 
+        alt={img.title} 
         loading="lazy" 
         decoding="async" 
         onLoad={() => setIsLoaded(true)}
@@ -356,7 +373,7 @@ function MasonryImage({
         />
         <div className="relative z-20 p-3 md:p-6 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out flex justify-between items-end">
           <span className="text-white font-sans font-medium tracking-wide text-xs md:text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] truncate pr-2">
-            {alt}
+            {img.title}
           </span>
           <span className="md:hidden flex-shrink-0 bg-black/45 backdrop-blur-md text-white px-2.5 py-1 rounded-full text-[9px] font-sans tracking-wider border border-white/20 shadow-sm">
             + More
@@ -371,13 +388,13 @@ function MasonryImage({
 function SliderItem({ 
   img, setCursorText, onImageClick 
 }: { 
-  img: CollectionImage, setCursorText: (text: string) => void, onImageClick: (src: string) => void 
+  img: CollectionImage, setCursorText: (text: string) => void, onImageClick: (img: CollectionImage) => void 
 }) {
   const [isLoaded, setIsLoaded] = useState(false);
 
   return (
     <div 
-      onClick={() => onImageClick(img.src)}
+      onClick={() => onImageClick(img)}
       onMouseEnter={() => setCursorText("+ More")}
       onMouseLeave={() => setCursorText("")}
       className="relative h-[250px] md:h-[500px] aspect-[4/5] flex-shrink-0 rounded-xl md:rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-500 cursor-none bg-gray-100 group"
@@ -413,11 +430,11 @@ function SliderItem({
   );
 }
 
-// --- 7. INFINITE SLIDER (Perfect CSS Math Breakout) ---
+// --- 7. INFINITE SLIDER ---
 function InfiniteSlider({ 
   images, setCursorText, onImageClick
 }: { 
-  images: CollectionImage[], setCursorText: (text: string) => void, onImageClick: (src: string) => void
+  images: CollectionImage[], setCursorText: (text: string) => void, onImageClick: (img: CollectionImage) => void
 }) {
   const [isHovered, setIsHovered] = useState(false);
   const duplicatedImages = [...images, ...images, ...images];
@@ -426,13 +443,11 @@ function InfiniteSlider({
 
   return (
     <div 
-      // Breaks out of the parent padding (p-6 / md:p-8) to touch the true screen edge, ignoring scrollbar widths!
       className="w-[calc(100%+3rem)] md:w-[calc(100%+4rem)] -ml-6 md:-ml-8 mt-10 md:mt-20 mb-10 overflow-hidden py-10 cursor-none"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => { setIsHovered(false); setCursorText(""); }}
     >
       <motion.div
-        // Added pr-4 md:pr-6 so the gap mathematics loop perfectly without a jump
         className="flex gap-4 md:gap-6 pr-4 md:pr-6 min-w-max"
         animate={{ x: ["0%", "-33.333333%"] }}
         transition={{ duration: isHovered ? 80 : 20, ease: "linear", repeat: Infinity }}
@@ -454,7 +469,7 @@ function InfiniteSlider({
 function CollectionAccordion({ 
   collection, setCursorText, onImageClick 
 }: { 
-  collection: CollectionData, setCursorText: (text: string) => void, onImageClick: (src: string) => void 
+  collection: CollectionData, setCursorText: (text: string) => void, onImageClick: (img: CollectionImage) => void 
 }) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -492,8 +507,7 @@ function CollectionAccordion({
               {collection.images.map((img, index) => (
                 <MasonryImage
                   key={index}
-                  src={img.src}
-                  alt={img.title}
+                  img={img}
                   setCursorText={setCursorText}
                   onImageClick={onImageClick}
                 />
@@ -513,7 +527,8 @@ const FEATURED_COLLECTION_ID = '2k26wrks';
 export default function App() {
   const [currentView, setCurrentView] = useState<'home' | 'collections'>('home');
   const [cursorText, setCursorText] = useState("");
-  const [selectedArtwork, setSelectedArtwork] = useState<string | null>(null);
+  // Now storing the full CollectionImage object instead of just the URL string
+  const [selectedArtwork, setSelectedArtwork] = useState<CollectionImage | null>(null);
   
   const [isModalImageLoaded, setIsModalImageLoaded] = useState(false);
 
@@ -528,13 +543,19 @@ export default function App() {
 
   const [randomMasonryImages] = useState<CollectionImage[]>(() => {
     const allAvailableImages = ARCHIVE_COLLECTIONS.flatMap(collection => collection.images);
-    const shuffledImages = shuffleArray(allAvailableImages);
+    
+    // FILTERS OUT ANY ARTWORK CURRENTLY IN THE FEATURED SLIDER
+    const filteredImages = allAvailableImages.filter(
+      img => !featuredSliderImages.some(featuredImg => featuredImg.src === img.src)
+    );
+    
+    const shuffledImages = shuffleArray(filteredImages);
     return shuffledImages.slice(0, 8);
   });
 
-  const handleArtworkSelect = (src: string) => {
+  const handleArtworkSelect = (img: CollectionImage) => {
     setIsModalImageLoaded(false); 
-    setSelectedArtwork(src);      
+    setSelectedArtwork(img);      
   };
 
   useEffect(() => {
@@ -604,8 +625,8 @@ export default function App() {
                      </div>
                    )}
                    <img 
-                     src={getCDNImage(selectedArtwork, 1600)} 
-                     alt="Expanded Artwork" 
+                     src={getCDNImage(selectedArtwork.src, 1600)} 
+                     alt={selectedArtwork.title} 
                      decoding="async"
                      onLoad={() => setIsModalImageLoaded(true)}
                      onClick={(e) => {
@@ -626,15 +647,16 @@ export default function App() {
                 </div>
                 
                 <div 
-                  className="text-center mt-6 pointer-events-auto"
+                  className="text-center mt-6 pointer-events-auto max-w-xl mx-auto px-4"
                   onMouseEnter={() => setCursorText("Close")}
                   onMouseLeave={() => setCursorText("")}
                 >
+                    {/* DYNAMIC TITLE & DESCRIPTION OVERRIDE */}
                     <h3 className="text-xl md:text-2xl font-serif text-gray-900">
-                       {currentView === 'home' ? 'Featured Exhibition' : 'Archive Detail'}
+                       {selectedArtwork.title}
                     </h3>
-                    <p className="text-gray-500 font-sans mt-2 text-xs md:text-sm tracking-wide">
-                      {currentView === 'home' ? 'Tap the image to view the full collection archive.' : 'A closer look at the details and digital framework.'}
+                    <p className="text-gray-500 font-sans mt-2 text-xs md:text-sm tracking-wide leading-relaxed">
+                      {selectedArtwork.description || (currentView === 'home' ? 'Tap the image to view the full collection archive.' : 'A closer look at the details and digital framework.')}
                     </p>
                 </div>
             </motion.div>
@@ -665,7 +687,7 @@ export default function App() {
             
             <div className="columns-2 md:columns-3 lg:columns-3 gap-3 md:gap-6">
               {randomMasonryImages.map((art, index) => (
-                <MasonryImage key={index} src={art.src} alt={art.title} setCursorText={setCursorText} onImageClick={handleArtworkSelect} />
+                <MasonryImage key={index} img={art} setCursorText={setCursorText} onImageClick={handleArtworkSelect} />
               ))}
             </div>
           </div>
@@ -679,7 +701,7 @@ export default function App() {
 
           <div className="mt-10 mb-20 md:mb-32 flex flex-col items-center">
             <p className="text-gray-400 font-sans mb-8 text-sm md:text-base">Have an idea in mind?</p>
-            <MagneticButton href="mailto:hm1tsv@gmail.com">Let's Talk Design</MagneticButton>
+            <MagneticButton href="mailto:hello@example.com">Let's Talk Design</MagneticButton>
           </div>
         </>
       ) : (
@@ -713,6 +735,13 @@ export default function App() {
 
         </div>
       )}
+
+      {/* FOOTER SECTION */}
+      <footer className="w-full mt-auto pt-10 pb-4 text-center z-10">
+        <span className="text-[10px] md:text-xs font-sans tracking-widest text-gray-400 uppercase">
+          ©2025 hm1tsu. All rights reserved.
+        </span>
+      </footer>
 
     </div>
   );
